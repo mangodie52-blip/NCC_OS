@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, usePage, router } from "@inertiajs/react";
-
+import Calculator from "@/Components/NCC/Utilities/Calculator/Calculator";
+import TalkAA from "@/Components/NCC/Assistant/TalkAA";
 import LogoN from "@/Pages/NCC/LogoN";
-
 import {
     LayoutDashboard,
     Boxes,
@@ -10,567 +10,508 @@ import {
     GitBranch,
     Factory,
     Warehouse,
-    FileText,
-    Settings,
+    Calculator as CalculatorIcon,
+    Bot,
     LogOut,
-    BriefcaseBusiness
+    BriefcaseBusiness,
+    UsersRound,
 } from "lucide-react";
 
-
-
-
-export default function Sidebar(){
-
+export default function Sidebar() {
 
     const { url, props } = usePage();
 
     const user = props.auth?.user;
 
-
     const [openUser, setOpenUser] = useState(false);
 
+    const [openCalculator, setOpenCalculator] = useState(false);
 
+    const [openAA, setOpenAA] = useState(false);
 
     const menus = [
 
         {
-            name:"Dashboard",
-            icon:LayoutDashboard,
-            url:"/ncc"
+            name: "Dashboard",
+            icon: LayoutDashboard,
+            url: "/ncc",
         },
 
         {
-            name:"Material",
-            icon:Boxes,
-            url:"/material"
+            name: "Material",
+            icon: Boxes,
+            url: "/material",
         },
 
         {
-            name:"Product",
-            icon:Package,
-            url:"/products"
+            name: "Product",
+            icon: Package,
+            url: "/products",
         },
 
         {
-            name:"BOM",
-            icon:GitBranch,
-            url:"/boms"
+            name: "BOM",
+            icon: GitBranch,
+            url: "/boms",
         },
 
         {
-            name:"Production",
-            icon:Factory,
-            url:"/production-orders"
+            name: "Production",
+            icon: Factory,
+            url: "/production-orders",
+        },
+
+    
+        {
+            name: "Warehouse",
+            icon: Warehouse,
+            url: "/material-requests",
+        },
+
+    {
+    name: "Operator Center",
+    icon: UsersRound,
+    url: "/production-progresses",
+},
+
+        {
+            name: "Talk To AA",
+            icon: Bot,
+            action: "talk-aa",
         },
 
         {
-            name:"Warehouse",
-            icon:Warehouse,
-            url:"/material-requests"
+            name: "Calculator",
+            icon: CalculatorIcon,
+            action: "calculator",
         },
-
-        {
-            name:"Report",
-            icon:FileText,
-            url:"#"
-        },
-
-        {
-            name:"Settings",
-            icon:Settings,
-            url:"#"
-        }
 
     ];
 
+    return (
 
+        <aside
 
+            className="
+            fixed
+            left-0
+            top-0
+            h-screen
+            w-[216px]
+            bg-[#050C14]
+            border-r
+            border-cyan-400/10
+            flex
+            flex-col
+            z-50
+            "
 
+        >
 
+            {/* LOGO */}
 
-return (
+            <div
 
-<aside
+                className="
+                h-48
+                flex
+                items-center
+                justify-center
+                border-b
+                border-white/5
+                "
 
-className="
-fixed
-left-0
-top-0
-h-screen
-w-[216px]
-bg-[#050C14]
-border-r
-border-cyan-400/10
-flex
-flex-col
-z-50
-"
+            >
 
->
+                <LogoN />
 
+            </div>
 
-{/* LOGO */}
+            {/* MENU */}
 
-<div
+            <nav
 
-className="
-h-48
-w-full
-flex
-items-center
-justify-center
-border-b
-border-white/5
-relative
-"
+                className="
+                flex-1
+                px-4
+                py-6
+                space-y-2
+                "
 
->
+            >
 
-    <LogoN />
+                {
 
-</div>
+                    menus.map((item) => {
 
+                        const Icon = item.icon;
 
+                        const active = item.url
+                            ? url.startsWith(item.url)
+                            : false;
 
+                        // TALK TO AA
+                        if (item.action === "talk-aa") {
 
+                            return (
 
-{/* MENU */}
+                                <button
 
-<nav
+                                    key={item.name}
 
-className="
-flex-1
-px-4
-py-6
-space-y-2
-"
+                                    onClick={() => setOpenAA(true)}
 
->
+                                    className="
+                                    w-full
+                                    flex
+                                    items-center
+                                    gap-4
+                                    px-4
+                                    py-3
+                                    rounded-lg
+                                    text-sm
+                                    text-slate-400
+                                    hover:text-white
+                                    hover:bg-white/5
+                                    transition
+                                    "
 
+                                >
 
-{
-menus.map((item)=>{
+                                    <Icon
 
+                                        size={19}
 
-const Icon=item.icon;
+                                        className="
+                                        text-slate-500
+                                        group-hover:text-orange-300
+                                        "
 
-const active=url.startsWith(item.url);
+                                    />
 
+                                    <span>
 
+                                        {item.name}
 
-return (
+                                    </span>
 
+                                </button>
 
-<Link
+                            );
 
-key={item.name}
+                        }
 
-href={item.url}
+                        // CALCULATOR
+                        if (item.action === "calculator") {
 
-className={`
+                            return (
 
-relative
-group
-flex
-items-center
-gap-4
-px-4
-py-3
-rounded-lg
-text-sm
-transition
+                                <button
 
+                                    key={item.name}
 
-${
-active
+                                    onClick={() => setOpenCalculator(true)}
 
-?
+                                    className="
+                                    w-full
+                                    flex
+                                    items-center
+                                    gap-4
+                                    px-4
+                                    py-3
+                                    rounded-lg
+                                    text-sm
+                                    text-slate-400
+                                    hover:text-white
+                                    hover:bg-white/5
+                                    transition
+                                    "
 
-`
-bg-cyan-400/10
-text-cyan-300
-`
+                                >
 
-:
+                                    <Icon
 
-`
+                                        size={19}
 
-text-slate-400
-hover:text-white
-hover:bg-white/5
+                                        className="
+                                        text-slate-500
+                                        group-hover:text-cyan-300
+                                        "
 
-`
+                                    />
 
-}
+                                    <span>
 
-`}
+                                        {item.name}
 
->
+                                    </span>
 
+                                </button>
 
-{
-active &&
+                            );
 
-<span
+                        }
 
-className="
-absolute
-left-0
-top-2
-bottom-2
-w-[3px]
-rounded-r
-bg-cyan-400
-shadow-[0_0_12px_#22d3ee]
-"
+                        return (
 
-/>
+                            <Link
 
-}
+                                key={item.name}
 
+                                href={item.url}
 
+                                className={`
+                                relative
+                                flex
+                                items-center
+                                gap-4
+                                px-4
+                                py-3
+                                rounded-lg
+                                text-sm
+                                transition
 
-<Icon
+                                ${active
+                                    ? "bg-cyan-400/10 text-cyan-300"
+                                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                                }
+                                `}
 
-size={19}
+                            >
 
-className={`
+                                {
 
-${
-active
+                                    active && (
 
-?
+                                        <span
 
-"text-cyan-400"
+                                            className="
+                                            absolute
+                                            left-0
+                                            top-2
+                                            bottom-2
+                                            w-[3px]
+                                            rounded-r
+                                            bg-cyan-400
+                                            "
 
-:
+                                        />
 
-"text-slate-500 group-hover:text-cyan-300"
+                                    )
 
-}
+                                }
 
-`}
+                                <Icon
 
-/>
+                                    size={19}
 
+                                    className={
+                                        active
+                                            ? "text-cyan-400"
+                                            : "text-slate-500"
+                                    }
 
-<span>
+                                />
 
-{item.name}
+                                <span>
 
-</span>
+                                    {item.name}
 
+                                </span>
 
+                            </Link>
 
-</Link>
+                        );
 
+                    })
 
-)
+                }
 
+            </nav>
+            {/* USER PANEL */}
 
-})
-}
+            <div
 
+                className="
+                border-t
+                border-white/5
+                p-4
+                relative
+                "
 
-</nav>
+            >
 
+                <button
 
+                    onClick={() => setOpenUser(!openUser)}
 
+                    className="
+                    w-full
+                    flex
+                    items-center
+                    justify-between
+                    "
 
+                >
 
+                    <div
 
+                        className="
+                        flex
+                        items-center
+                        gap-3
+                        "
 
-{/* USER */}
+                    >
 
-<div
+                        <div
 
-className="
-border-t
-border-white/5
-p-4
-relative
-"
+                            className="
+                            w-9
+                            h-9
+                            rounded-full
+                            bg-cyan-400/10
+                            border
+                            border-cyan-400/30
+                            flex
+                            items-center
+                            justify-center
+                            text-cyan-300
+                            "
 
->
+                        >
 
+                            {user?.name?.charAt(0) ?? "N"}
 
-<button
+                        </div>
 
-onClick={()=>setOpenUser(!openUser)}
+                        <div>
 
-className="
-w-full
-flex
-items-center
-justify-between
-group
-"
+                            <p className="text-sm text-white">
 
->
+                                {user?.name ?? "Neats Admin"}
 
+                            </p>
 
-<div
+                            <p className="text-xs text-slate-500">
 
-className="
-flex
-items-center
-gap-3
-"
+                                Administrator
 
->
+                            </p>
 
+                        </div>
 
-<div
+                    </div>
 
-className="
-w-9
-h-9
-rounded-full
-bg-cyan-400/10
-border
-border-cyan-400/30
-flex
-items-center
-justify-center
-text-cyan-300
-"
+                    <BriefcaseBusiness
 
->
+                        size={20}
 
-{user?.name?.charAt(0) ?? "N"}
+                        className="text-cyan-400"
 
-</div>
+                    />
 
+                </button>
 
+                {
 
+                    openUser && (
 
+                        <div
 
-<div
+                            className="
+                            absolute
+                            bottom-20
+                            left-4
+                            right-4
+                            bg-[#0b1320]
+                            border
+                            border-cyan-400/20
+                            rounded-xl
+                            p-4
+                            shadow-2xl
+                            "
 
-className="
-text-left
-"
+                        >
 
->
+                            <button
 
-<p
+                                onClick={() => router.post("/logout")}
 
-className="
-text-sm
-text-white
-"
+                                className="
+                                w-full
+                                flex
+                                items-center
+                                justify-center
+                                gap-2
+                                py-2
+                                rounded-lg
+                                bg-red-500/10
+                                text-red-400
+                                hover:bg-red-500
+                                hover:text-white
+                                transition
+                                "
 
->
+                            >
 
-{user?.name ?? "Neats Admin"}
+                                <LogOut size={16} />
 
-</p>
+                                Logout
 
+                            </button>
 
-<p
+                        </div>
 
-className="
-text-xs
-text-slate-500
-"
+                    )
 
->
+                }
 
+            </div>
 
+            {/* CALCULATOR */}
 
-</p>
+            {
 
+                openCalculator && (
 
-</div>
+                    <div
 
+                        className="
+                        fixed
+                        right-8
+                        bottom-8
+                        z-[100]
+                        "
 
+                    >
 
-</div>
+                        <Calculator />
 
+                    </div>
 
+                )
 
+            }
 
+            {/* TALK TO AA */}
 
-<BriefcaseBusiness
+            {
 
-size={22}
+                openAA && (
 
-className={`
+                    <TalkAA
 
-transition
+                        onMinimize={() => setOpenAA(false)}
 
-${
-openUser
+                    />
 
-?
+                )
 
-"text-cyan-300 rotate-12"
+            }
 
-:
+        </aside>
 
-"text-cyan-400"
-
-}
-
-`}
-
-/>
-
-
-
-</button>
-
-
-
-
-
-
-
-
-{/* USER DETAIL */}
-
-{
-openUser &&
-
-<div
-
-className="
-absolute
-bottom-20
-left-4
-right-4
-bg-[#0b1320]
-border
-border-cyan-400/20
-rounded-xl
-p-4
-shadow-2xl
-z-50
-"
-
->
-
-
-<div
-
-className="
-flex
-items-center
-gap-3
-mb-4
-"
-
->
-
-
-<div
-
-className="
-w-10
-h-10
-rounded-full
-bg-cyan-400/10
-border
-border-cyan-400/30
-flex
-items-center
-justify-center
-text-cyan-300
-font-bold
-"
-
->
-
-{user?.name?.charAt(0) ?? "N"}
-
-</div>
-
-
-
-<div>
-
-<p
-
-className="
-text-white
-text-sm
-font-semibold
-"
-
->
-
-{user?.name ?? "Neats Admin"}
-
-</p>
-
-
-<p
-
-className="
-text-xs
-text-slate-500
-"
-
->
-
-Administrator
-
-</p>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-<button
-
-onClick={()=>router.post('/logout')}
-
-className="
-w-full
-flex
-items-center
-justify-center
-gap-2
-py-2
-rounded-lg
-bg-red-500/10
-text-red-400
-hover:bg-red-500
-hover:text-white
-transition
-"
-
->
-
-<LogOut size={16}/>
-
-Logout
-
-</button>
-
-
-
-</div>
-
-}
-
-
-</div>
-
-
-
-
-
-</aside>
-
-
-)
-
+    );
 
 }

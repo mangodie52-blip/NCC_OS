@@ -5,7 +5,26 @@ import NCCLayout from "@/Layouts/NCCLayout";
 
 
 export default function Index() {
+const formatDateTime = (date) => {
 
+    if (!date) return "-";
+
+    const d = new Date(date);
+
+    return `${d
+        .toLocaleDateString("id-ID", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        })
+    } • ${
+        d.toLocaleTimeString("id-ID", {
+            hour: "2-digit",
+            minute: "2-digit"
+        })
+    }`;
+
+};
 
     const { products } = usePage().props;
 
@@ -512,7 +531,7 @@ text-xs
 text-slate-400
 ">
 
-                                            {product.created_at}
+                                            {formatDateTime(product.created_at)}
 
                                         </td>
 
@@ -527,7 +546,7 @@ text-xs
 text-slate-400
 ">
 
-                                            {product.updated_at}
+                                            {formatDateTime(product.updated_at)}
 
                                         </td>
 

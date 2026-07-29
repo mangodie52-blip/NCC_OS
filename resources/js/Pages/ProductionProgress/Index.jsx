@@ -1,203 +1,197 @@
-import { useForm, router } from "@inertiajs/react";
-import { useState } from 'react';
+import { useForm } from "@inertiajs/react";
+import { useState } from "react";
+
 import NCCLayout from "@/Layouts/NCCLayout";
-import PrimaryButton from '@/Components/PrimaryButton';
-import SecondaryButton from '@/Components/SecondaryButton';
+import PrimaryButton from "@/Components/PrimaryButton";
+import SecondaryButton from "@/Components/SecondaryButton";
 
 
 export default function Index({
     orders,
     progresses,
-    range,
 }) {
 
-    const { data, setData, post, processing } = useForm({
 
-        production_order_id: '',
-        tanggal: new Date().toISOString().slice(0, 10),
-        line: '',
-        operator: '',
-        qty_selesai: '',
-        keterangan: '',
+    const [showModal,setShowModal] = useState(false);
+
+
+    const [search,setSearch] = useState("");
+
+
+
+    const {
+        data,
+        setData,
+        post,
+        processing,
+        reset
+
+    } = useForm({
+
+        production_order_id:"",
+        tanggal:new Date()
+            .toISOString()
+            .slice(0,10),
+
+        line:"",
+        operator:"",
+        qty_selesai:"",
+        keterangan:"",
 
     });
 
-    const [search, setSearch] = useState('');
-
-    const [sort, setSort] = useState({
-        field: 'tanggal',
-        direction: 'desc'
-    });
 
 
-    const submit = (e) => {
+
+    const submit = (e)=>{
+
         e.preventDefault();
 
-        post(route('production-progresses.store'), {
-            onSuccess: () => {
-                setData({
-                    production_order_id: '',
-                    tanggal: new Date().toISOString().slice(0, 10),
-                    line: '',
-                    operator: '',
-                    qty_selesai: '',
-                    keterangan: '',
-                });
-            },
-        });
+
+        post(
+            route("production-progresses.store"),
+            {
+
+                onSuccess:()=>{
+
+                    reset();
+
+                    setShowModal(false);
+
+                }
+
+            }
+        );
+
     };
 
 
-    // cari SPK yang dipilih
+
+
+
     const selectedOrder = orders.find(
-        order => order.id == data.production_order_id
+        order =>
+        order.id == data.production_order_id
     );
 
 
-    // sort
-    const changeSort = (field) => {
 
-        setSort({
 
-            field,
 
-            direction:
-                sort.field === field &&
-                    sort.direction === 'asc'
-                    ?
-                    'desc'
-                    :
-                    'asc'
+    const filteredProgresses = progresses.filter(p=>{
 
-        });
 
-    };
+        const keyword =
+        search.toLowerCase();
 
 
 
-    const filteredProgresses = progresses
+        return (
 
-        .filter(p => {
+            p.production_order
+            ?.nomor_spk
+            ?.toLowerCase()
+            .includes(keyword)
 
 
-            const keyword = search.toLowerCase();
 
+            ||
 
-            return (
+            p.production_order
+            ?.product
+            ?.nama
+            ?.toLowerCase()
+            .includes(keyword)
 
-                p.production_order?.nomor_spk
-                    ?.toLowerCase()
-                    .includes(keyword)
 
 
-                ||
+            ||
 
-                p.production_order?.product?.nama
-                    ?.toLowerCase()
-                    .includes(keyword)
+            p.operator
+            ?.toLowerCase()
+            .includes(keyword)
 
+        );
 
-                ||
 
-                p.operator
-                    ?.toLowerCase()
-                    .includes(keyword)
+    });
 
-            );
 
 
-        })
 
 
-        .sort((a, b) => {
 
 
-            let x;
-            let y;
+return (
 
+<NCCLayout>
 
-            if (sort.field === 'nomor_spk') {
 
+<div className="
+p-6
+space-y-6
+">
 
-                x = a.production_order?.nomor_spk || '';
 
-                y = b.production_order?.nomor_spk || '';
 
 
-            }
-            else if (sort.field === 'operator') {
 
+{/* HEADER */}
 
-                x = a.operator || '';
-
-                y = b.operator || '';
-
-
-            }
-            else if (sort.field === 'qty') {
-
-
-                x = a.qty_selesai;
-
-                y = b.qty_selesai;
-
-
-            }
-            else {
-
-
-                x = a[sort.field];
-
-                y = b[sort.field];
-
-
-            }
-
-
-
-            if (sort.direction === 'asc') {
-
-                return x > y ? 1 : -1;
-
-            }
-
-
-            return x < y ? 1 : -1;
-
-
-        });
-
-
-
-
-    return (
-
-        <NCCLayout>
-
-            <div className="p-6">
-
-
-                <div className="flex justify-between items-center mb-6">
-
-                    <div>
-                        <h1 className="text-3xl font-black tracking-wide text-white">
-                            Progress Produksi
-                        </h1>
-
-                        <p className="text-slate-400 mt-1">
-                            Monitoring hasil produksi harian setiap line.
-                        </p>
-                    </div>
-
-
-                    <div className="flex gap-2">
-
-                        <a
-                            href={route("production-progresses.export-csv")}
-                            className="
-inline-flex
+<div className="
+flex
+justify-between
 items-center
-gap-2
+">
+
+
+<div>
+
+
+<h1 className="
+text-3xl
+font-black
+tracking-wide
+text-white
+">
+
+PRODUCTION OPERATOR CENTER
+
+</h1>
+
+
+
+<p className="
+text-slate-400
+mt-1
+">
+
+Monitoring progress produksi setiap line operator.
+
+</p>
+
+
+</div>
+
+
+
+
+
+<div className="
+flex
+gap-3
+">
+
+
+<a
+
+href={
+route(
+"production-progresses.export-csv"
+)
+}
+
+className="
 px-5
 py-3
 rounded-xl
@@ -205,607 +199,948 @@ bg-emerald-600
 hover:bg-emerald-500
 text-white
 font-semibold
+transition
 shadow-lg
-shadow-emerald-500/20
-transition
-duration-300
-hover:scale-105
 "
-                        >
 
-                            📊 Export Excel
+>
 
-                        </a>
+📊 Export
 
-                    </div>
 
-                </div>
-                <div className="
-w-full
+</a>
+
+
+
+
+<PrimaryButton
+
+onClick={()=>
+setShowModal(true)
+}
+
+>
+
++ ADD PROGRESS
+
+</PrimaryButton>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+{/* SEARCH */}
+
+
+<div className="
+bg-slate-900/70
 border
-rounded-lg
-p-3
+border-cyan-400/20
+rounded-2xl
+p-4
+shadow-xl
 ">
 
-                    <input
 
-                        type="text"
+<input
 
-                        placeholder="Cari SPK / Produk / Operator..."
+type="text"
 
-                        value={search}
-
-                        onChange={(e) => setSearch(e.target.value)}
-
-                        className="
-w-full
-rounded-xl
-border
-border-slate-700
-bg-slate-800
-text-white
-placeholder:text-slate-500
-px-4
-py-3
-outline-none
-transition
-focus:border-cyan-400
-focus:ring-2
-focus:ring-cyan-500/30
+placeholder="
+Cari SPK / Produk / Operator...
 "
 
-                    />
+value={search}
 
-                </div>
+onChange={
+e=>setSearch(e.target.value)
+}
 
 
-
-
-
-                <form
-                    onSubmit={submit}
-                    className="
-                   bg-slate-900
+className="
+w-full
+rounded-xl
+bg-slate-950
 border
 border-slate-700
+text-white
+px-4
+py-3
+
+focus:border-cyan-400
+focus:ring
+focus:ring-cyan-400/20
+
+outline-none
+"
+
+/>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+{/* MODAL ADD PROGRESS */}
+
+
+
+{
+
+showModal && (
+
+
+<div
+
+className="
+fixed
+inset-0
+bg-black/70
+backdrop-blur-sm
+flex
+items-center
+justify-center
+z-[100]
+"
+
+>
+
+
+
+<div
+
+className="
+w-full
+max-w-2xl
+
+bg-[#08111d]
+
+border
+border-cyan-400/30
+
 rounded-2xl
+
 shadow-2xl
-                    "
-                >
+shadow-cyan-500/20
 
+p-6
 
-                    <select
-
-                        value={data.production_order_id}
-
-                        onChange={(e) =>
-                            setData(
-                                'production_order_id',
-                                e.target.value
-                            )
-                        }
-
-                        className="
-w-full
-rounded-xl
-border
-border-slate-700
-bg-slate-800
-text-white
-px-4
-py-3
-focus:border-cyan-400
-focus:ring-2
-focus:ring-cyan-500/30
 "
 
-                        required
-
-                    >
-
-                        <option value="">
-                            Pilih SPK
-                        </option>
-
-
-                        {
-                            orders.map(order => (
-
-                                <option
-                                    key={order.id}
-                                    value={order.id}
-                                >
-
-                                    {order.nomor_spk}
-                                    -
-                                    {order.product?.nama}
-
-                                </option>
-
-                            ))
-                        }
-
-
-                    </select>
+>
 
 
 
-
-                    {
-                        selectedOrder && (
-
-                            <div
-                                className="
-                               bg-slate-950
-                                p-4
-                                rounded-lg
-                                "
-                            >
-
-                                <p className="text-slate-300">
-                                    <span className="text-cyan-400 font-semibold">
-                                        SPK :
-                                    </span>{" "}
-                                    {selectedOrder.nomor_spk}
-                                </p>
-
-                                <p className="text-slate-300">
-                                    <span className="text-cyan-400 font-semibold">
-                                        Produk :
-                                    </span>{" "}
-                                    {selectedOrder.product?.nama}
-                                </p>
-
-                                <p className="text-slate-300">
-                                    <span className="text-cyan-400 font-semibold">
-                                        Target :
-                                    </span>{" "}
-                                    {selectedOrder.qty} PCS
-                                </p>
+<div className="
+flex
+justify-between
+items-center
+mb-6
+">
 
 
-                            </div>
-
-                        )
-                    }
-
-                    <div className="grid grid-cols-2 gap-4">
+<div>
 
 
-                        <input
+<h2 className="
+text-xl
+font-bold
+text-white
+">
 
-                            type="date"
+ADD PRODUCTION PROGRESS
 
-                            value={data.tanggal}
+</h2>
 
-                            onChange={(e) =>
-                                setData(
-                                    'tanggal',
-                                    e.target.value
-                                )
-                            }
 
-                            className="
+<p className="
+text-xs
+text-slate-500
+tracking-widest
+">
+
+OPERATOR TELEMETRY INPUT
+
+</p>
+
+
+</div>
+
+
+
+
+<button
+
+onClick={()=>
+setShowModal(false)
+}
+
+className="
+text-slate-400
+hover:text-white
+"
+
+>
+
+✕
+
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+<form
+
+onSubmit={submit}
+
+className="
+space-y-4
+"
+
+>
+
+
+
+
+
+<select
+
+value={
+data.production_order_id
+}
+
+
+onChange={
+e=>
+setData(
+"production_order_id",
+e.target.value
+)
+}
+
+
+required
+
+
+className="
 w-full
 rounded-xl
+bg-slate-950
 border
 border-slate-700
-bg-slate-800
 text-white
-placeholder:text-slate-500
 px-4
 py-3
+
+focus:border-cyan-400
 outline-none
-transition
-focus:border-cyan-400
-focus:ring-2
-focus:ring-cyan-500/30
 "
 
-                            required
-
-                        />
+>
 
 
+<option value="">
 
-                        <input
+Pilih SPK
 
-                            type="number"
+</option>
 
-                            placeholder="Qty selesai hari ini"
 
-                            value={data.qty_selesai}
+{
 
-                            onChange={(e) =>
-                                setData(
-                                    'qty_selesai',
-                                    e.target.value
-                                )
-                            }
+orders.map(order=>(
 
-                            className="
+
+<option
+
+key={order.id}
+
+value={order.id}
+
+>
+
+
+{order.nomor_spk}
+-
+{order.product?.nama}
+
+
+</option>
+
+
+))
+
+
+}
+
+
+
+</select>
+
+
+
+
+
+{
+selectedOrder && (
+
+
+<div
+
+className="
+bg-slate-950
+border
+border-cyan-400/20
+rounded-xl
+p-4
+"
+
+>
+
+
+<p className="text-slate-300">
+
+<span className="text-cyan-400">
+
+SPK :
+
+</span>
+
+{" "}
+{selectedOrder.nomor_spk}
+
+</p>
+
+
+
+<p className="text-slate-300">
+
+<span className="text-cyan-400">
+
+Produk :
+
+</span>
+
+{" "}
+{selectedOrder.product?.nama}
+
+</p>
+
+
+
+<p className="text-slate-300">
+
+<span className="text-cyan-400">
+
+Target :
+
+</span>
+
+{" "}
+{selectedOrder.qty} PCS
+
+</p>
+
+
+</div>
+
+
+)
+
+}
+
+
+
+
+
+
+<div className="
+grid
+grid-cols-2
+gap-4
+">
+
+
+<input
+
+type="date"
+
+value={data.tanggal}
+
+onChange={
+e=>
+setData(
+"tanggal",
+e.target.value
+)
+}
+
+
+className="
+input-ncc
 w-full
 rounded-xl
+bg-slate-950
 border
 border-slate-700
-bg-slate-800
 text-white
-placeholder:text-slate-500
 px-4
 py-3
-outline-none
-transition
-focus:border-cyan-400
-focus:ring-2
-focus:ring-cyan-500/30
 "
 
-                            required
-
-                        />
-
-
-                    </div>
+/>
 
 
 
+<input
+
+type="number"
+
+placeholder="Qty selesai"
+
+value={data.qty_selesai}
+
+onChange={
+e=>
+setData(
+"qty_selesai",
+e.target.value
+)
+}
 
 
-                    <div className="grid grid-cols-2 gap-4">
+required
 
 
-                        <input
-
-                            type="text"
-
-                            placeholder="Line"
-
-                            value={data.line}
-
-                            onChange={(e) =>
-                                setData(
-                                    'line',
-                                    e.target.value
-                                )
-                            }
-
-                            className="
+className="
 w-full
 rounded-xl
+bg-slate-950
 border
 border-slate-700
-bg-slate-800
 text-white
-placeholder:text-slate-500
 px-4
 py-3
-outline-none
-transition
-focus:border-cyan-400
-focus:ring-2
-focus:ring-cyan-500/30
 "
 
-                        />
+/>
 
 
+</div>
+// LANJUTAN MODAL
 
-                        <input
 
-                            type="text"
+<div className="
+grid
+grid-cols-2
+gap-4
+">
 
-                            placeholder="Operator"
 
-                            value={data.operator}
+<input
 
-                            onChange={(e) =>
-                                setData(
-                                    'operator',
-                                    e.target.value
-                                )
-                            }
+type="text"
 
-                            className="
+placeholder="Line"
+
+value={data.line}
+
+onChange={
+e=>
+setData(
+"line",
+e.target.value
+)
+}
+
+
+className="
 w-full
 rounded-xl
+bg-slate-950
 border
 border-slate-700
-bg-slate-800
 text-white
-placeholder:text-slate-500
 px-4
 py-3
-outline-none
-transition
 focus:border-cyan-400
-focus:ring-2
-focus:ring-cyan-500/30
+outline-none
 "
 
-                        />
-
-
-                    </div>
+/>
 
 
 
 
+<input
 
-                    <textarea
+type="text"
 
-                        placeholder="Keterangan"
+placeholder="Operator"
 
-                        value={data.keterangan}
+value={data.operator}
 
-                        onChange={(e) =>
-                            setData(
-                                'keterangan',
-                                e.target.value
-                            )
-                        }
+onChange={
+e=>
+setData(
+"operator",
+e.target.value
+)
+}
 
-                        className="
+
+className="
 w-full
 rounded-xl
+bg-slate-950
 border
 border-slate-700
-bg-slate-800
 text-white
-placeholder:text-slate-500
 px-4
 py-3
-outline-none
-transition
 focus:border-cyan-400
-focus:ring-2
-focus:ring-cyan-500/30
+outline-none
 "
 
-                    />
+/>
 
-                    <PrimaryButton
-                        type="submit"
-                        disabled={processing}
-                    >
-                        💾 Simpan Progress
-                    </PrimaryButton>
 
-                </form>
 
-                <div
-                    className="
-                   bg-slate-900
+</div>
+
+
+
+
+
+
+
+<textarea
+
+placeholder="Keterangan"
+
+value={data.keterangan}
+
+onChange={
+e=>
+setData(
+"keterangan",
+e.target.value
+)
+}
+
+
+className="
+w-full
+rounded-xl
+bg-slate-950
 border
 border-slate-700
+text-white
+px-4
+py-3
+focus:border-cyan-400
+outline-none
+"
+
+
+/>
+
+
+
+
+
+
+<div className="
+flex
+justify-end
+gap-3
+pt-4
+">
+
+
+<SecondaryButton
+
+onClick={()=>
+setShowModal(false)
+}
+
+>
+
+Cancel
+
+</SecondaryButton>
+
+
+
+<PrimaryButton
+
+type="submit"
+
+disabled={processing}
+
+>
+
+💾 SIMPAN PROGRESS
+
+</PrimaryButton>
+
+
+
+</div>
+
+
+
+
+</form>
+
+
+</div>
+
+
+</div>
+
+
+)
+
+}
+
+
+
+
+
+
+
+
+
+{/* TABLE */}
+
+
+
+<div
+
+className="
+bg-slate-900/80
+
+border
+border-cyan-400/20
+
 rounded-2xl
-shadow-2xl
+
 overflow-hidden
-                    "
-                >
+
+shadow-xl
+
+"
+
+>
 
 
-                    <table className="w-full">
+
+<table
+
+className="
+w-full
+"
+
+>
 
 
-                        <thead className="
-rounded-xl
-border
-border-cyan-500/20
-bg-cyan-500/10
-p-5
-">
+<thead
+
+className="
+bg-cyan-400/10
+border-b
+border-cyan-400/20
+"
+
+>
 
 
-                            <tr>
+<tr>
 
-                                <th className="
+
+<th className="
 p-4
 text-center
-text-slate-300
-font-semibold
+text-xs
+tracking-wider
+text-cyan-300
 ">
 
-                                    <button
+TANGGAL
 
-                                    >
-
-                                        Tanggal
-                                    </button>
-
-                                </th>
+</th>
 
 
-                                <th className="
+
+<th className="
 p-4
 text-center
-text-slate-300
-font-semibold
+text-xs
+tracking-wider
+text-cyan-300
 ">
 
-                                    <button
+SPK
 
-                                    >
-
-                                        SPK
-                                    </button>
-
-                                </th>
+</th>
 
 
-                                <th className="
+
+<th className="
 p-4
 text-center
-text-slate-300
-font-semibold
+text-xs
+tracking-wider
+text-cyan-300
 ">
-                                    Nama Produk
-                                </th>
+
+PRODUCT
+
+</th>
 
 
-                                <th className="
+
+<th className="
 p-4
 text-center
-text-slate-300
-font-semibold
+text-xs
+tracking-wider
+text-cyan-300
 ">
-                                    Line
-                                </th>
+
+LINE
+
+</th>
 
 
-                                <th className="
+
+<th className="
 p-4
 text-center
-text-slate-300
-font-semibold
+text-xs
+tracking-wider
+text-cyan-300
 ">
 
-                                    <button
+OPERATOR
 
-                                    >
-
-                                        Operator
-
-                                    </button>
-
-                                </th>
+</th>
 
 
-                                <th className="
+
+<th className="
 p-4
 text-center
-text-slate-300
-font-semibold
+text-xs
+tracking-wider
+text-cyan-300
 ">
-                                    Qty
-                                </th>
+
+QTY
+
+</th>
 
 
-                            </tr>
+</tr>
 
 
-                        </thead>
+</thead>
 
 
 
-                        <tbody>
 
 
-                            {
-                                progresses.length > 0 ?
+
+<tbody>
 
 
-                                    filteredProgresses.map(p => (
+{
+
+filteredProgresses.length > 0 ?
 
 
-                                        <tr
-                                            key={p.id}
-                                            className="
+
+filteredProgresses.map(
+p=>(
+
+
+<tr
+
+key={p.id}
+
+className="
 border-b
 border-slate-800
-hover:bg-slate-800/60
+hover:bg-cyan-400/5
 transition
 "
-                                        >
 
 
-                                            <td className="
+>
+
+
+
+<td className="
 p-4
 text-center
 text-slate-300
 ">
-                                                {p.tanggal}
-                                            </td>
+
+{p.tanggal}
+
+</td>
 
 
-                                            <td className="
+
+
+<td className="
 p-4
 text-center
 text-slate-300
 ">
-                                                {p.production_order?.nomor_spk}
-                                            </td>
+
+{p.production_order?.nomor_spk}
+
+</td>
 
 
-                                            <td className="
+
+
+<td className="
 p-4
 text-center
 text-slate-300
 ">
-                                                {p.production_order?.product?.nama}
-                                            </td>
+
+{p.production_order?.product?.nama}
+
+</td>
 
 
-                                            <td className="
+
+
+<td className="
+p-4
+text-center
+text-cyan-300
+font-semibold
+">
+
+{p.line}
+
+</td>
+
+
+
+
+<td className="
 p-4
 text-center
 text-slate-300
 ">
-                                                {p.line}
-                                            </td>
+
+{p.operator}
+
+</td>
 
 
-                                            <td className="
+
+
+<td className="
 p-4
 text-center
-text-slate-300
-">
-                                                {p.operator}
-                                            </td>
-
-
-                                            <td className="
-                                
-p-4
-text-center
-text-slate-300
+font-mono
+text-white
 "
-                                            >
 
-                                                {p.qty_selesai}
+>
 
-                                            </td>
+{p.qty_selesai}
 
-
-                                        </tr>
+</td>
 
 
-                                    ))
 
 
-                                    :
+</tr>
 
 
-                                    <tr>
+)
 
-                                        <td
-                                            colSpan="6"
-                                            className="p-5 text-center text-gray-500"
-                                        >
+)
 
-                                            Belum ada progress produksi
-
-                                        </td>
-
-                                    </tr>
+:
 
 
-                            }
+
+<tr>
 
 
-                        </tbody>
+<td
+
+colSpan="6"
+
+className="
+p-6
+text-center
+text-slate-500
+"
+
+>
+
+Belum ada progress produksi
+
+</td>
 
 
-                    </table>
+</tr>
 
 
-                </div>
+
+}
 
 
-            </div>
+</tbody>
 
 
-        </NCCLayout >
+</table>
 
-    );
+
+</div>
+
+
+
+
+
+</div>
+
+
+</NCCLayout>
+
+
+);
 
 }

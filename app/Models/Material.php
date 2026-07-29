@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Material extends Model
 {
-   protected $fillable = [
+  protected $fillable = [
     'kode',
     'nama',
     'kategori',
     'satuan',
+    'isi_kemasan',
     'stok',
-    'isi_kemasan', // tambahkan ini
-    'stok_minimum',
+    'keterangan',
 ];
     public function boms()
     {

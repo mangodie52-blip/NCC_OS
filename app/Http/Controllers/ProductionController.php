@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Production;
+use App\Models\ProductionOrder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -10,25 +11,37 @@ class ProductionController extends Controller
 {
 
     /**
-     * Tampilkan data produksi
+     * NCC Operator Center
      */
     public function index()
     {
 
-        $productions = ProductionOrder::orderBy('created_at')->with('product')->get();
+
+        $productions = ProductionOrder::with('product')
+            ->latest()
+            ->get();
 
 
-        return Inertia::render('Produksi/Index', [
 
-            'productions' => $productions
+        return Inertia::render(
+            'OperatorCenter/Index',
+            [
 
-        ]);
+                'productions' => $productions
+
+            ]
+        );
+
+
     }
 
 
 
+
+
+
     /**
-     * Simpan produksi baru
+     * Create Production
      */
     public function store(Request $request)
     {
@@ -36,78 +49,179 @@ class ProductionController extends Controller
 
         $validated = $request->validate([
 
-            'spk_no' => 'required|string|max:50',
 
-            'po_id' => 'required|string|max:100',
+            'spk_no' => [
+                'required',
+                'string',
+                'max:50'
+            ],
 
-            'po_date' => 'nullable|date',
 
-            'model' => 'required|string|max:100',
+            'po_id' => [
+                'required',
+                'string',
+                'max:100'
+            ],
 
-            'line' => 'required|string|max:50',
 
-            'qty_awal' => 'required|integer|min:0',
+            'po_date' => [
+                'nullable',
+                'date'
+            ],
 
-            'qty_akhir' => 'nullable|integer|min:0',
 
-            'deadline' => 'required|date',
+            'model' => [
+                'required',
+                'string',
+                'max:100'
+            ],
 
-            'status' => 'required|string'
+
+            'line' => [
+                'required',
+                'string',
+                'max:50'
+            ],
+
+
+            'qty_awal' => [
+                'required',
+                'integer',
+                'min:0'
+            ],
+
+
+            'qty_akhir' => [
+                'nullable',
+                'integer',
+                'min:0'
+            ],
+
+
+            'deadline' => [
+                'required',
+                'date'
+            ],
+
+
+            'status' => [
+                'required',
+                'string'
+            ],
+
 
         ]);
+
+
 
 
         Production::create($validated);
 
 
 
+
         return redirect()
-            ->route('produksi.index')
-            ->with('success', 'Data produksi berhasil ditambahkan');
+
+            ->route('production.index')
+
+            ->with(
+                'success',
+                'Production node created'
+            );
+
+
     }
 
 
 
 
 
+
+
     /**
-     * Update data produksi
+     * Update Production
      */
-    public function update(Request $request, $id)
+    public function update(
+        Request $request,
+        $id
+    )
     {
+
+
+        $production = Production::findOrFail($id);
+
+
+
         $validated = $request->validate([
+
+
             'spk_no' => 'required|string|max:50',
+
             'po_id' => 'required|string|max:100',
+
             'po_date' => 'nullable|date',
+
             'model' => 'required|string|max:100',
+
             'line' => 'required|string|max:50',
+
             'qty_awal' => 'required|integer|min:0',
+
             'qty_akhir' => 'nullable|integer|min:0',
+
             'deadline' => 'required|date',
+
             'status' => 'required|string',
+
+
         ]);
 
-       
-        
+
+
+
 
         $production->update($validated);
 
-        return redirect()->route('produksi.index');
+
+
+
+
+        return redirect()
+
+            ->route('production.index');
+
+
     }
+
+
 
 
 
 
 
     /**
-     * Hapus produksi
+     * Delete Production
      */
     public function destroy($id)
     {
+
+
         $production = Production::findOrFail($id);
+
+
 
         $production->delete();
 
-        return redirect()->route('produksi.index');
+
+
+
+        return redirect()
+
+            ->route('production.index');
+
+
     }
+
+
+
 }

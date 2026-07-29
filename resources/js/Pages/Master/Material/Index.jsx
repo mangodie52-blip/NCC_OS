@@ -15,7 +15,9 @@ export default function Index({ materials }) {
     const [selectedId,setSelectedId] = useState(null);
     const [showModal,setShowModal] = useState(false);
     const [search,setSearch] = useState("");
-
+const formatNumber = (value) => {
+    return Number(value).toString();
+};
 
 
     const filteredMaterials = materials.filter((m)=>
@@ -43,23 +45,24 @@ export default function Index({ materials }) {
 
 
     const {
-        data,
-        setData,
-        post,
-        put,
-        processing,
-        reset
+    data,
+    setData,
+    post,
+    put,
+    processing,
+    reset
 
-    } = useForm({
+} = useForm({
 
-        kode:"",
-        nama:"",
-        kategori:"",
-        satuan:"",
-        stok:"",
-        stok_minimum:"",
+    kode: "",
+    nama: "",
+    kategori: "",
+    satuan: "",
+    isi_kemasan: 1,
+       stok_awal: "0",
+    keterangan: "",
 
-    });
+});
 
 
 
@@ -116,33 +119,27 @@ export default function Index({ materials }) {
 
 
 
-    const editMaterial=(item)=>{
+    const editMaterial = (item) => {
 
+    setEditMode(true);
+    setSelectedId(item.id);
 
-        setEditMode(true);
+    setData({
 
-        setSelectedId(item.id);
+        kode: item.kode,
+        nama: item.nama,
+        kategori: item.kategori,
+        satuan: item.satuan,
+        isi_kemasan: item.isi_kemasan,
+        stok: item.stok,
+        stok_awal: item.stok,
+        keterangan: item.keterangan,
 
+    });
 
-        setData({
+    setShowModal(true);
 
-            kode:item.kode,
-            nama:item.nama,
-            kategori:item.kategori,
-            satuan:item.satuan,
-            stok:item.stok,
-            stok_minimum:item.stok_minimum,
-
-        });
-
-
-        setShowModal(true);
-
-
-    };
-
-
-
+};
 
 
 
@@ -274,58 +271,34 @@ mb-8
 "
 >
 
-
-
 <TelemetryCard
-
-title="TOTAL NODE"
-
-value={materials.length}
-
-color="cyan"
-
+    title="TOTAL NODE"
+    value={materials.length}
+    color="cyan"
 />
 
 
-
-
-
 <TelemetryCard
-
-title="CRITICAL STOCK"
-
-value={
-materials.filter(
-m =>
-Number(m.stok)
-<=
-Number(m.stok_minimum)
-).length
-}
-
-color="red"
-
+    title="LOW STOCK"
+    value={
+        materials.filter(
+            m =>
+                Number(m.stok) > 0 &&
+                Number(m.stok) <= Number(m.stok_minimum)
+        ).length
+    }
+    color="cyan"
 />
 
 
-
-
-
 <TelemetryCard
-
-title="NORMAL RESOURCE"
-
-value={
-materials.filter(
-m =>
-Number(m.stok)
->
-Number(m.stok_minimum)
-).length
-}
-
-color="green"
-
+    title="OUT OF STOCK"
+    value={
+        materials.filter(
+            m => Number(m.stok) === 0
+        ).length
+    }
+    color="cyan"
 />
 
 
@@ -467,7 +440,8 @@ bg-[#0b1320]
 "RESOURCE",
 "CLASS",
 "UNIT",
-"LEVEL",
+"PACK",
+"STOCK",
 "STATE",
 "COMMAND"
 
@@ -605,6 +579,17 @@ text-xs
 
 </td>
 
+<td
+className="
+p-4
+font-mono
+text-slate-300
+"
+>
+
+{formatNumber(material.isi_kemasan)}
+
+</td>
 
 
 
@@ -908,7 +893,7 @@ focus:ring-cyan-400/30
 
 </div>
 
-                            <div>
+<div>
 
 <label
 className="
@@ -922,35 +907,83 @@ mb-2
 KATEGORI
 </label>
 
-
-<input
+<select
 
 value={data.kategori}
-
-placeholder="ENTER MATERIAL CATEGORY..."
 
 onChange={(e)=>setData("kategori",e.target.value)}
 
 className="
 w-full
-bg-[#0b1320]/40
+rounded-xl
 border
-border-slate-700/50
-rounded-lg
+border-slate-700
+bg-slate-900
+text-white
 px-4
 py-3
-text-sm
-text-slate-100
-placeholder:text-slate-600
-placeholder:italic
+transition
 outline-none
 focus:border-cyan-400
-focus:ring-1
-focus:ring-cyan-400/30
+focus:ring-2
+focus:ring-cyan-500/30
 "
 
-/>
+>
 
+<option value="">
+PILIH KATEGORI
+</option>
+
+<option value="Kain">
+Kain
+</option>
+
+<option value="Webbing">
+Webbing
+</option>
+
+<option value="Benang">
+Benang
+</option>
+
+<option value="Resleting">
+Resleting
+</option>
+
+<option value="Busa">
+Busa
+</option>
+
+<option value="Velcro">
+Velcro
+</option>
+
+<option value="Label">
+Label
+</option>
+
+<option value="Aksesoris">
+Aksesoris
+</option>
+
+<option value="Packing">
+Packing
+</option>
+
+<option value="Hardware">
+Hardware
+</option>
+
+<option value="Kimia">
+Kimia
+</option>
+
+<option value="Lainnya">
+Lainnya
+</option>
+
+</select>
 
 </div>
 
@@ -1024,7 +1057,8 @@ UNIT
 
 </div>
 
-                            <div>
+
+<div>
 
 <label
 className="
@@ -1035,20 +1069,26 @@ text-slate-500
 mb-2
 "
 >
-INITIAL STOCK
+ISI KEMASAN
 </label>
-
-
 
 <input
 
 type="number"
 
-value={data.stok}
+min="1"
 
-placeholder="INPUT INITIAL STOCK..."
+step="any"
 
-onChange={(e)=>setData("stok",e.target.value)}
+value={
+    data.isi_kemasan
+    ? Number(data.isi_kemasan).toString()
+    : ""
+}
+
+placeholder="CONTOH : 100"
+
+onChange={(e)=>setData("isi_kemasan",e.target.value)}
 
 className="
 w-full
@@ -1070,9 +1110,8 @@ focus:ring-cyan-400/30
 
 />
 
-
 </div>
-
+                            
                             <div>
 
 <label
@@ -1084,7 +1123,7 @@ text-slate-500
 mb-2
 "
 >
-MINIMUM STOCK
+STOK AWAL
 </label>
 
 
@@ -1095,9 +1134,9 @@ type="number"
 
 value={data.stok_minimum}
 
-placeholder="INPUT MINIMUM STOCK..."
+placeholder="INPUT INITIAL STOCK..."
 
-onChange={(e)=>setData("stok_minimum",e.target.value)}
+onChange={(e)=>setData("stok_awal",e.target.value)}
 
 className="
 w-full
@@ -1294,13 +1333,73 @@ function TelemetryCard({title,value,color}){
 
 const styles = {
 
-cyan:"border-cyan-900/40 text-cyan-300",
+cyan:
+"border-cyan-400/30 text-cyan-300 shadow-[0_0_15px_rgba(34,211,238,0.08)]",
 
-red:"border-red-900/40 text-red-400",
 
-green:"border-green-900/40 text-green-400"
+orange:
+"border-orange-400/30 text-orange-300 shadow-[0_0_15px_rgba(251,146,60,0.08)]",
+
+
+red:
+"border-red-400/30 text-red-400 shadow-[0_0_15px_rgba(248,113,113,0.08)]",
+
+
+green:
+"border-green-400/30 text-green-400"
 
 };
+
+
+
+return (
+
+<div
+className={`
+bg-[#08111d]/80
+border
+${styles[color]}
+rounded-xl
+p-5
+transition
+hover:bg-[#0b1320]
+`}
+>
+
+
+<div
+className="
+text-[10px]
+tracking-[0.4em]
+text-slate-500
+"
+>
+
+{title}
+
+</div>
+
+
+
+<div
+className="
+text-3xl
+font-bold
+mt-3
+"
+>
+
+{value}
+
+</div>
+
+
+
+</div>
+
+)
+
+
 
 
 

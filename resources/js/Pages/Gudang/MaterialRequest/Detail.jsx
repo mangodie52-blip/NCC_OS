@@ -381,208 +381,131 @@ export default function Detail() {
                         <table className="w-full">
 
                             <thead className="bg-cyan-500/10 border-b border-slate-700">
+    <tr>
+        <th className="p-4 text-left text-slate-300 font-semibold">
+            Material
+        </th>
 
-                                <tr>
+        <th className="p-4 text-center text-slate-300 font-semibold">
+            Qty Request
+        </th>
 
-                                    <th className="p-4 text-left text-slate-300 font-semibold">
-                                        Material
-                                    </th>
+        <th className="p-4 text-center text-slate-300 font-semibold">
+            Satuan
+        </th>
 
-                                    <th className="p-4 text-center text-slate-300 font-semibold">
-                                        Request
-                                    </th>
+        <th className="p-4 text-center text-slate-300 font-semibold">
+            Qty Approved
+        </th>
 
-                                    <th className="p-4 text-center text-slate-300 font-semibold">
-                                        Approved
-                                    </th>
-
-                                    <th className="p-4 text-center text-slate-300 font-semibold">
-                                        Terpakai
-                                    </th>
-
-                                    <th className="p-4 text-center text-slate-300 font-semibold">
-                                        Konversi
-                                    </th>
-
-                                </tr>
-
-                            </thead>
+        <th className="p-4 text-center text-slate-300 font-semibold">
+            Status
+        </th>
+    </tr>
+</thead>
 
                             <tbody>
 
-                                {(mr.details || []).map((detail) => {
-
-                                    const isiKemasan =
-                                        Number(detail.material?.isi_kemasan || 1);
-
-                                    const approved =
-                                        Number(detail.qty_approved || 0);
-
-                                    const approvedMeter =
-                                        detail.satuan === 'CM'
-                                            ? approved / 100
-                                            : approved;
-
-                                    const rollTerpakai =
-                                        approvedMeter / isiKemasan;
-
-                                    return (
-
-                                        <tr
-                                            key={detail.id}
-                                            className="
-                        border-b
-                        border-slate-800
-                        hover:bg-slate-800/60
-                        transition
-                        "
-                                        >
-
-                                            <td className="p-4 text-white font-semibold">
-
-                                                {detail.material?.nama ?? '-'}
-
-                                            </td>
-
-                                            <td className="p-4 text-center text-white">
-
-                                                {formatNumber(detail.qty_request)}
-
-                                                {' '}
-
-                                                {detail.satuan}
-
-                                            </td>
-
-                                            <td className="p-4 text-center">
-
-                                                {approved > 0 ? (
-
-                                                    <span
-                                                        className="
-                                    inline-block
-                                    bg-green-500/20
-                                    text-green-400
-                                    rounded-full
-                                    px-3
-                                    py-1
-                                    font-bold
-                                    "
-                                                    >
-
-                                                        {formatNumber(approved)}
-
-                                                        {' '}
-
-                                                        {detail.satuan}
-
-                                                    </span>
-
-                                                ) : (
-
-                                                    <span className="text-slate-500">
-
-                                                        -
-
-                                                    </span>
-
-                                                )}
-
-                                            </td>
-
-                                            <td className="p-4 text-center">
-
-                                                {approved > 0 ? (
-
-                                                    <span
-                                                        className="
-                                    inline-block
-                                    bg-blue-500/20
-                                    text-blue-400
-                                    rounded-full
-                                    px-3
-                                    py-1
-                                    font-bold
-                                    "
-                                                    >
-
-                                                        {formatNumber(rollTerpakai)}
-
-                                                        {' '}
-
-                                                        {detail.material?.satuan}
-
-                                                    </span>
-
-                                                ) : (
-
-                                                    <span className="text-slate-500">
-
-                                                        -
-
-                                                    </span>
-
-                                                )}
-
-                                            </td>
-
-                                            <td className="p-4 text-center">
-
-                                                {approved > 0 ? (
-
-                                                    <div className="space-y-2">
-
-                                                        <div
-                                                            className="
-                                        inline-block
-                                        bg-cyan-500/20
-                                        text-cyan-400
-                                        rounded-full
-                                        px-3
-                                        py-1
-                                        font-bold
-                                        "
-                                                        >
-
-                                                            {formatNumber(rollTerpakai)}
-
-                                                            {' '}
-
-                                                            {detail.material?.satuan}
-
-                                                        </div>
-
-                                                        <div className="text-xs text-slate-500">
-
-                                                            1 {detail.material?.satuan}
-
-                                                            {' = '}
-
-                                                            {isiKemasan} M
-
-                                                        </div>
-
-                                                    </div>
-
-                                                ) : (
-
-                                                    <span className="text-slate-500">
-
-                                                        -
-
-                                                    </span>
-
-                                                )}
-
-                                            </td>
-
-                                        </tr>
-
-                                    );
-
-                                })}
-
-                            </tbody>
+{(mr.details || []).map((detail) => (
+
+<tr
+    key={detail.id}
+    className="
+        border-b
+        border-slate-800
+        hover:bg-slate-800/60
+        transition
+    "
+>
+
+<td className="p-4 text-white font-semibold">
+    {detail.material?.nama}
+</td>
+
+<td className="p-4 text-center text-white">
+    {formatNumber(detail.qty_request)}
+</td>
+
+<td className="p-4 text-center">
+    <span
+        className="
+        inline-block
+        bg-cyan-500/20
+        text-cyan-300
+        rounded-full
+        px-3
+        py-1
+        font-bold
+        "
+    >
+        {detail.satuan}
+    </span>
+</td>
+
+<td className="p-4 text-center">
+
+    {Number(detail.qty_approved) > 0 ? (
+
+        <span
+            className="
+            inline-block
+            bg-green-500/20
+            text-green-400
+            rounded-full
+            px-3
+            py-1
+            font-bold
+            "
+        >
+
+            {formatNumber(detail.qty_approved)}
+
+        </span>
+
+    ) : (
+
+        "-"
+
+    )}
+
+</td>
+
+<td className="p-4 text-center">
+
+    <span
+        className={`
+
+        inline-block
+        px-3
+        py-1
+        rounded-full
+        text-xs
+        font-bold
+
+        ${
+            Number(detail.qty_approved) > 0
+            ? "bg-green-500/20 text-green-400"
+            : "bg-yellow-500/20 text-yellow-400"
+        }
+
+        `}
+    >
+
+        {
+            Number(detail.qty_approved) > 0
+            ? "APPROVED"
+            : "WAITING"
+        }
+
+    </span>
+
+</td>
+
+</tr>
+
+))}
+
+</tbody>
 
                         </table>
 

@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Controllers\NCC\AssistantController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\DashboardController;
@@ -15,6 +15,7 @@ use App\Http\Controllers\OperationCenterController;
 use App\Http\Controllers\MaterialIssueController;
 use App\Http\Controllers\ProductionProgressController;
 use App\Http\Controllers\NCCController;
+
 
 
 
@@ -373,6 +374,14 @@ Route::middleware(['auth'])->group(function () {
     ->name('production-progresses.store');
 
 
+//AA
+Route::post(
+    '/ncc/talk-aa',
+    [AssistantController::class,'ask']
+)
+->middleware('auth');
+
+
 
     Route::get(
         '/production-progresses/export-csv',
@@ -380,10 +389,16 @@ Route::middleware(['auth'])->group(function () {
     )
     ->name('production-progresses.export-csv');
 
+    Route::get('/ncc/calculator', function(){
+
+    return Inertia::render(
+        'NCC/Utilities/Calculator'
+    );
+
+})
+->middleware('auth');
 
 });
-
-
 
 
 
