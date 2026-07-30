@@ -208,85 +208,139 @@ transition
 
 
                                                 {openMaterials === mr.id && (
-                                                    <div
-                                                        ref={popupRef}
-                                                        className="
-absolute
-z-50
-mt-3
-left-1/2
--translate-x-1/2
-w-96
-rounded-2xl
-border
-border-cyan-500/20
-bg-slate-900/95
-backdrop-blur-xl
-shadow-2xl
-shadow-cyan-500/10
-p-5
-text-left
+
+<div
+    ref={popupRef}
+    className="
+    absolute
+    z-50
+    mt-3
+    left-1/2
+    -translate-x-1/2
+    w-[430px]
+    rounded-2xl
+    border
+    border-cyan-500/20
+    bg-[#08111d]/95
+    backdrop-blur-xl
+    shadow-2xl
+    shadow-cyan-500/10
+    p-5
+    text-left
 "
-                                                    >
+>
 
-                                                        <div className="flex items-center justify-between mb-3">
-                                                            <h3 className="text-cyan-400 font-bold tracking-wide">
-                                                                📦 Material Disiapkan
-                                                            </h3>
+    <div className="mb-4">
 
-                                                            <span className="text-xs text-slate-500">
-                                                                {mr.details.length} Item
-                                                            </span>
-                                                        </div>
+        <div className="text-[10px] tracking-[0.35em] text-slate-500">
+            MATERIAL READY
+        </div>
 
-                                                        <div className="
-border-t
-border-slate-700
-pt-3
-max-h-72
-overflow-y-auto
-space-y-2
-">
+        <div className="mt-1 text-cyan-400 font-bold text-lg">
+            Production Order Material
+        </div>
 
-                                                            {mr.details.map((d) => (
-                                                                <div
-                                                                    key={d.id}
-                                                                    className="
-flex
-justify-between
-items-center
-rounded-lg
-bg-slate-800/60
-border
-border-slate-700
-px-3
-py-2
-hover:border-cyan-500/30
-transition
-"
-                                                                >
+    </div>
 
-                                                                    <span className="text-slate-200 font-medium">
-                                                                        {d.material?.nama}
-                                                                    </span>
+    <div
+        className="
+        border-t
+        border-slate-700
+        pt-4
+        max-h-72
+        overflow-y-auto
+        space-y-3
+    "
+    >
 
-                                                                    <span className="
-text-cyan-400
-font-bold
-">
-                                                                        {Number(d.qty_approved || 0).toLocaleString("id-ID")} {d.satuan}
-                                                                    </span>
+        {mr.details.map((d)=>(
 
+        <div
+            key={d.id}
+            className="
+            flex
+            justify-between
+            items-center
+            rounded-xl
+            border
+            border-slate-700
+            bg-slate-800/50
+            px-4
+            py-3
+            hover:border-cyan-500/30
+            transition
+        "
+        >
 
+            <div>
 
+                <div className="font-semibold text-slate-100">
+                    ● {d.material?.nama}
+                </div>
 
-                                                                </div>
-                                                            ))}
+                <div className="text-[11px] text-slate-500">
+                    Warehouse Material
+                </div>
 
-                                                        </div>
+            </div>
 
-                                                    </div>
-                                                )}
+            <div className="text-right">
+
+                <div className="font-bold text-cyan-300">
+                    {Number(d.qty_approved || 0).toLocaleString("id-ID")} {d.satuan}
+                </div>
+
+                <div className="text-[10px] text-green-400">
+                    READY
+                </div>
+
+            </div>
+
+        </div>
+
+        ))}
+
+    </div>
+
+    <div
+        className="
+        border-t
+        border-slate-700
+        mt-4
+        pt-4
+        space-y-2
+    "
+    >
+
+        <div className="flex justify-between">
+
+            <span className="text-slate-500">
+                TOTAL MATERIAL
+            </span>
+
+            <span className="font-bold text-white">
+                {mr.details.length} Item
+            </span>
+
+        </div>
+
+        <div className="flex justify-between">
+
+            <span className="text-slate-500">
+                STATUS
+            </span>
+
+            <span className="font-bold text-green-400">
+                READY TO ISSUE
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+)}
 
                                             </>
 

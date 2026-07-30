@@ -299,37 +299,32 @@ class MaterialRequestController extends Controller
     }
 
     public function reject(Request $request, MaterialRequest $materialRequest)
-    {
-        $request->validate([
-            'reason' => 'required|string|min:5',
-        ]);
+{
+    $request->validate([
+        'reason' => 'required|string|min:5',
+    ]);
 
-        $materialRequest->update([
-            'status' => 'Rejected',
-            'reject_reason' => $request->reason,
-            'approved_by' => auth()->id(),
-            'approved_at' => now(),
-        ]);
+    $materialRequest->update([
+        'status'        => 'Rejected',
+        'reject_reason' => $request->reason,
+        'approved_by'   => auth()->id(),
+        'approved_at'   => now(),
+    ]);
 
-        ActivityLog::create([
-            'user_id' => auth()->id(),
-            'module' => 'Material Request',
-            'action' => 'REJECT',
-            'reference_type' => 'MaterialRequest',
-            'reference_id' => $materialRequest->id,
-            'activity' => 'Reject Material Request',
-            'description' => 'Reject MR ' . $materialRequest->nomor_mr,
-            'ip_address' => request()->ip(),
-        ]);
+    ActivityLog::create([
+        'user_id'        => auth()->id(),
+        'module'         => 'Material Request',
+        'action'         => 'REJECT',
+        'reference_type' => 'MaterialRequest',
+        'reference_id'   => $materialRequest->id,
+        'activity'       => 'Reject Material Request',
+        'description'    => 'Reject MR ' . $materialRequest->nomor_mr,
+        'ip_address'     => request()->ip(),
+    ]);
 
-        MaterialRequestDetail::create([
-            'material_request_id' => $mr->id,
-            'material_id'         => $bom->material_id,
-            'qty_request'         => $totalKebutuhan,
-            'qty_approved'        => 0,
-            'satuan'              => $bom->satuan, // ✅ dari BOM
-        ]);
-
-        return back()->with('success', 'Material Request berhasil direject.');
-    }
+    return back()->with(
+        'success',
+        'Material Request berhasil direject.'
+    );
+}
 }

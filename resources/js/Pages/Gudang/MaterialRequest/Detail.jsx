@@ -350,28 +350,77 @@ export default function Detail() {
                                 Status
 
                             </div>
+<div className="mt-2 space-y-3">
 
-                            <div className="mt-2">
+    <span
+        className={`
+            inline-block
+            rounded-full
+            px-3
+            py-1
+            font-bold
 
-                                <span className="
-                            bg-green-500/20
-                            text-green-400
-                            rounded-full
-                            px-3
-                            py-1
-                            font-bold
-                            inline-block
-                        ">
+            ${
+                mr.status === "Approved"
+                    ? "bg-green-500/20 text-green-400"
+                : mr.status === "Rejected"
+                    ? "bg-red-500/20 text-red-400"
+                : mr.status === "Partial"
+                    ? "bg-orange-500/20 text-orange-400"
+                : mr.status === "Pending"
+                    ? "bg-yellow-500/20 text-yellow-400"
+                : "bg-cyan-500/20 text-cyan-400"
+            }
+        `}
+    >
+        {mr.status}
+    </span>
 
-                                    {mr.status}
+    {mr.status === "Rejected" && mr.reject_reason && (
 
-                                </span>
+        <div
+            className="
+                mt-3
+                rounded-lg
+                border
+                border-red-500/30
+                bg-red-500/10
+                p-3
+            "
+        >
 
-                            </div>
+            <div
+                className="
+                    text-[11px]
+                    uppercase
+                    tracking-widest
+                    text-red-400
+                    mb-1
+                "
+            >
+                Alasan Reject
+            </div>
+
+            <div
+                className="
+                    text-sm
+                    text-slate-200
+                    whitespace-pre-line
+                "
+            >
+                {mr.reject_reason}
+            </div>
+
+        </div>
+
+    )}
+
+</div>
 
                         </div>
 
                     </div>
+                   
 
                     {/* =========================
                 TABEL MATERIAL

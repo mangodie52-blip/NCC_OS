@@ -1,136 +1,701 @@
 import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
+import GuestLayout from '@/Layouts/GuestLayout';
 import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+
 
 
 export default function Register() {
+
+
     const { data, setData, post, processing, errors, reset } = useForm({
+
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
+
     });
+
+
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+
+
+
     const submit = (e) => {
+
         e.preventDefault();
 
+
         post(route('register'), {
-            onFinish: () => reset('password', 'password_confirmation'),
+
+            onFinish: () =>
+                reset(
+                    'password',
+                    'password_confirmation'
+                ),
+
         });
+
     };
 
+
+
+
+
+    const inputClass = `
+    mt-2
+    w-full
+    rounded-lg
+    border
+    border-slate-700
+    bg-[#070B12]
+    px-4
+    py-3
+    text-sm
+    text-slate-200
+    placeholder-slate-600
+    outline-none
+    transition
+
+    autofill:bg-[#070B12]
+    autofill:text-slate-200
+
+    focus:border-cyan-400
+    focus:ring-1
+    focus:ring-cyan-400
+`;
+
+
+
+
+
+
     return (
+
         <GuestLayout>
-            <Head title="Register" />
 
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
 
-                    <TextInput
-                        id="name"
-                        name="name"
-                        value={data.name}
-                        className="mt-1 block w-full"
-                        autoComplete="name"
-                        isFocused={true}
-                        onChange={(e) => setData('name', e.target.value)}
-                        required
-                    />
+            <Head title="NCC Register" />
 
-                    <InputError message={errors.name} className="mt-2" />
-                </div>
 
-                <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
 
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        onChange={(e) => setData('email', e.target.value)}
-                        required
-                    />
+            <div
 
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
+                className="
+                    rounded-2xl
+                    border
+                    border-slate-800
+                    bg-slate-950/80
+                    p-8
+                    shadow-2xl
+                    backdrop-blur
+                "
 
-                <div className="relative mt-1">
+            >
 
-                    <InputLabel htmlFor="password" value="Password" />
 
-                    <TextInput
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        name="password"
-                        value={data.password}
-                        className="block w-full pr-10"
-                        autoComplete="new-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                        required
-                    />
-                    <button
-                        type="button"
-                        className="absolute inset-y-0 right-0 flex items-center text-gray-500"
-                        onClick={() => setShowPassword(!showPassword)}
+
+
+                <div className="mb-8 text-center">
+
+
+                    <h1
+
+                        className="
+                            text-xl
+                            font-bold
+                            tracking-[0.3em]
+                            text-cyan-400
+                        "
+
                     >
-                        {showPassword ? "🙈" : "👁️"}
-                    </button>
 
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
+                        NCC OS
 
-                <div className="relative mt-1">
-                    <InputLabel
-                        htmlFor="password_confirmation"
-                        value="Confirm Password"
-                    />
+                    </h1>
 
-                    <TextInput
-                        id="password_confirmation"
-                        type={showConfirmPassword ? "text" : "password"}
-                        name="password_confirmation"
-                        value={data.password_confirmation}
-                        className="block w-full pr-10"
-                        autoComplete="new-password"
-                        onChange={(e) =>
-                            setData('password_confirmation', e.target.value)
-                        }
-                        required
-                    />
 
-                    <button
-                        type="button"
-                        className="absolute inset-y-0 right-0 flex items-center text-gray-500"
-                        onClick={() =>
-                            setShowConfirmPassword(!showConfirmPassword)
-                        }
+
+                    <p
+
+                        className="
+                            mt-2
+                            text-xs
+                            tracking-widest
+                            text-slate-500
+                        "
+
                     >
-                        {showConfirmPassword ? "🙈" : "👁️"}
-                    </button>
+
+                        CREATE CONTROL CENTER ACCOUNT
+
+                    </p>
+
+
+
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
-                    <Link
-                        href={route('login')}
-                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+
+
+
+
+
+
+                <form onSubmit={submit}>
+
+
+
+
+                    {/* USER NAME */}
+
+
+                    <div>
+
+
+                        <label
+
+                            className="
+                                text-xs
+                                tracking-widest
+                                text-slate-500
+                            "
+
+                        >
+
+                            USER NAME
+
+                        </label>
+
+
+
+                        <input
+
+
+                            type="text"
+
+
+                            value={data.name}
+
+
+                            onChange={(e)=>
+
+                                setData(
+                                    'name',
+                                    e.target.value
+                                )
+
+                            }
+
+
+
+                            className={inputClass}
+
+
+                            required
+
+
+                        />
+
+
+
+                        <InputError
+
+                            message={errors.name}
+
+                        />
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+                    {/* EMAIL */}
+
+
+
+                    <div className="mt-5">
+
+
+                        <label
+
+                            className="
+                                text-xs
+                                tracking-widest
+                                text-slate-500
+                            "
+
+                        >
+
+                            EMAIL
+
+                        </label>
+
+
+
+
+                        <input
+
+
+                            type="email"
+
+
+                            value={data.email}
+
+
+
+                            onChange={(e)=>
+
+                                setData(
+                                    'email',
+                                    e.target.value
+                                )
+
+                            }
+
+
+
+                            className={inputClass}
+
+
+
+                            required
+
+
+                        />
+
+
+
+                        <InputError
+
+                            message={errors.email}
+
+                        />
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+                    {/* PASSWORD */}
+
+<div className="relative mt-5">
+
+
+    <label
+
+        className="
+            text-xs
+            tracking-widest
+            text-slate-500
+        "
+
+    >
+
+        PASSWORD
+
+    </label>
+
+
+
+
+    <input
+
+
+        type={
+
+            showPassword
+            ?
+            "text"
+            :
+            "password"
+
+        }
+
+
+
+        value={data.password}
+
+
+
+        onChange={(e)=>
+
+            setData(
+                'password',
+                e.target.value
+            )
+
+        }
+
+
+
+        autoComplete="new-password"
+
+
+
+        className={inputClass}
+
+
+
+        required
+
+
+
+    />
+
+
+
+
+
+    <button
+
+
+        type="button"
+
+
+
+        onClick={()=>
+
+            setShowPassword(
+                !showPassword
+            )
+
+        }
+
+
+
+        className="
+
+            absolute
+            right-3
+            top-9
+            flex
+            items-center
+            justify-center
+            text-slate-500
+            transition
+
+            hover:text-cyan-400
+
+        "
+
+
+
+    >
+
+
+
+        {
+
+            showPassword
+
+            ?
+
+            <EyeOff size={18}/>
+
+            :
+
+            <Eye size={18}/>
+
+        }
+
+
+
+    </button>
+
+
+
+
+
+    <InputError
+
+        message={errors.password}
+
+    />
+
+
+</div>
+
+
+
+
+
+
+
+
+
+                    {/* CONFIRM PASSWORD */}
+
+
+
+                    <div className="relative mt-5">
+
+
+
+                        <label
+
+                            className="
+                                text-xs
+                                tracking-widest
+                                text-slate-500
+                            "
+
+                        >
+
+                            CONFIRM PASSWORD
+
+                        </label>
+
+
+
+
+
+
+                        <input
+
+
+
+
+                            type={
+
+                                showConfirmPassword
+                                ?
+                                "text"
+                                :
+                                "password"
+
+                            }
+
+
+
+                            value={data.password_confirmation}
+
+
+
+
+                            onChange={(e)=>
+
+                                setData(
+                                    'password_confirmation',
+                                    e.target.value
+                                )
+
+                            }
+
+
+
+
+                            className={inputClass}
+
+
+
+
+                            required
+
+
+
+
+                        />
+
+
+
+
+
+
+
+                        <button
+
+
+
+                            type="button"
+
+
+
+                            onClick={()=>
+
+                                setShowConfirmPassword(
+                                    !showConfirmPassword
+                                )
+
+                            }
+
+
+
+                            className="
+
+                                absolute
+                                right-3
+                                top-9
+                                flex
+                                items-center
+                                justify-center
+                                text-slate-500
+                                transition
+                                hover:text-cyan-400
+
+                            "
+
+
+
+                        >
+
+
+
+                            {
+
+                                showConfirmPassword
+
+                                ?
+
+                                <EyeOff size={18}/>
+
+                                :
+
+                                <Eye size={18}/>
+
+                            }
+
+
+
+                        </button>
+
+
+
+                    </div>
+
+
+
+
+
+
+
+
+
+                    <div
+
+
+                        className="
+
+                            mt-8
+                            flex
+                            items-center
+                            justify-between
+
+                        "
+
+
                     >
-                        Already registered?
-                    </Link>
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Register
-                    </PrimaryButton>
-                </div>
-            </form>
+
+
+
+
+                        <Link
+
+
+                            href={route('login')}
+
+
+
+                            className="
+
+                                text-xs
+                                tracking-widest
+                                text-slate-500
+                                hover:text-cyan-400
+
+                            "
+
+
+
+                        >
+
+                            LOGIN
+
+                        </Link>
+
+
+
+
+
+
+
+                        <button
+
+
+
+                            disabled={processing}
+
+
+
+                            className="
+
+                                rounded-lg
+                                border
+                                border-cyan-400
+                                bg-cyan-400/10
+                                px-6
+                                py-3
+                                text-xs
+                                font-bold
+                                tracking-widest
+                                text-cyan-300
+                                transition
+                                hover:bg-cyan-400/20
+
+                            "
+
+
+
+                        >
+
+
+                            REGISTER
+
+
+                        </button>
+
+
+
+
+
+
+                    </div>
+
+
+
+
+
+                </form>
+
+
+
+
+            </div>
+
+
+
+
+
         </GuestLayout>
+
     );
+
+
 }
