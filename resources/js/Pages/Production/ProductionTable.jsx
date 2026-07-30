@@ -23,6 +23,8 @@ export default function ProductionTable({ orders, onEdit }) {
         });
     };
 
+    
+
     return (
         <div
             className="
@@ -192,7 +194,7 @@ ${order.status === "Cancel"
                                     <div className="flex justify-center flex-wrap gap-2">
 
                                         <button
-                                            onClick={() => sendToGudang(order)}
+                                             onClick={() => sendToGudang(order)}
                                             className="
 rounded-lg
 bg-cyan-600

@@ -11,6 +11,39 @@ export default function Index() {
 
     const [showModal, setShowModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const sendToGudang = (order) => {
+
+    router.post(
+
+        route("material-requests.store"),
+
+        {
+            production_order_id: order.id,
+        },
+
+        {
+
+            preserveScroll: true,
+
+            onSuccess: () => {
+
+                alert("✅ SPK berhasil dikirim ke Gudang.");
+
+            },
+
+            onError: (errors) => {
+
+                console.log(errors);
+
+                alert("❌ Gagal mengirim SPK ke Gudang.");
+
+            },
+
+        }
+
+    );
+
+};
 
     return (
 

@@ -224,7 +224,6 @@ export default function Login({ status, canResetPassword }) {
                             "
                         >
 
-                            SYSTEM ONLINE • NCC CORE
 
                         </div>
 
@@ -236,7 +235,35 @@ export default function Login({ status, canResetPassword }) {
 
 
             </div>
+<div
+    className="
+    absolute
+    bottom-6
+    left-1/2
+    -translate-x-1/2
+    text-center
+    "
+>
+    <p className="text-[11px] tracking-[0.35em] uppercase text-cyan-400/70">
+        POWERED BY
+    </p>
 
+    <p
+        className="
+        mt-1
+        text-lg
+        font-black
+        tracking-[0.4em]
+        text-white
+        "
+    >
+        AI<span className="text-cyan-400">NCC</span>
+    </p>
+
+    <p className="mt-2 text-[10px] tracking-widest text-slate-500">
+        Artificial Intelligence for NEATS Control Center
+    </p>
+</div>
 
         </GuestLayout>
 

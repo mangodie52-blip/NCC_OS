@@ -25,7 +25,7 @@ class MaterialQuery
             'cek',
             'lihat',
             'ada',
-            'tolong'
+                        
         ];
 
 

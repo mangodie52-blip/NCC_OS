@@ -85,6 +85,7 @@ export default function Index() {
                 alert('❌ Gagal menyimpan BOM');
             },
         });
+        
     };
 
     // =========================
@@ -115,8 +116,7 @@ export default function Index() {
                 return satuan; // kalau ada satuan baru, tampil apa adanya
         }
     };
-
-
+    
     return (
 
         <NCCLayout>

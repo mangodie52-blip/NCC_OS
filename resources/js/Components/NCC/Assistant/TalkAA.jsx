@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import {
     Bot,
@@ -11,10 +11,6 @@ import {
 export default function TalkAA({
     onMinimize
 }){
-
-
-    
-
 
 
     const [position,setPosition] = useState({
@@ -43,6 +39,8 @@ export default function TalkAA({
 
 
 
+
+
     const [chat,setChat] = useState([
 
         {
@@ -52,6 +50,35 @@ export default function TalkAA({
         }
 
     ]);
+
+
+
+
+
+    // =========================
+    // AUTO SCROLL CHAT
+    // =========================
+
+    const chatEndRef = useRef(null);
+
+
+
+    useEffect(()=>{
+
+
+        chatEndRef.current?.scrollIntoView({
+
+            behavior:"smooth"
+
+        });
+
+
+
+    },[chat]);
+
+
+
+
 
 
 
@@ -77,9 +104,13 @@ export default function TalkAA({
 
 
 
+
+
+
     const moveDrag=(e)=>{
 
         if(!dragging) return;
+
 
 
         setPosition({
@@ -90,7 +121,12 @@ export default function TalkAA({
 
         });
 
+
+
     };
+
+
+
 
 
 
@@ -108,6 +144,11 @@ export default function TalkAA({
 
 
 
+
+
+
+
+
     const sendMessage = async()=>{
 
 
@@ -116,6 +157,7 @@ export default function TalkAA({
 
 
         if(!text) return;
+
 
 
 
@@ -136,7 +178,10 @@ export default function TalkAA({
 
 
 
+
         setMessage("");
+
+
 
 
 
@@ -146,22 +191,50 @@ export default function TalkAA({
 
 
             const token = document
-    .querySelector('meta[name="csrf-token"]')
-    ?.getAttribute("content");
 
-const response = await fetch("/ncc/talk-aa", {
-    method: "POST",
-    credentials: "same-origin",
-    headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "X-CSRF-TOKEN": token,
-        "X-Requested-With": "XMLHttpRequest",
-    },
-    body: JSON.stringify({
-        message: text,
-    }),
-});
+            .querySelector('meta[name="csrf-token"]')
+
+            ?.getAttribute("content");
+
+
+
+
+
+
+            const response = await fetch("/ncc/talk-aa", {
+
+
+                method:"POST",
+
+
+                credentials:"same-origin",
+
+
+                headers:{
+
+
+                    "Content-Type":"application/json",
+
+                    "Accept":"application/json",
+
+                    "X-CSRF-TOKEN":token,
+
+                    "X-Requested-With":"XMLHttpRequest",
+
+                },
+
+
+
+                body:JSON.stringify({
+
+                    message:text
+
+                })
+
+
+
+            });
+
 
 
 
@@ -172,9 +245,14 @@ const response = await fetch("/ncc/talk-aa", {
 
 
 
+
+
+
+
             setChat(prev=>[
 
                 ...prev,
+
 
                 {
 
@@ -184,36 +262,54 @@ const response = await fetch("/ncc/talk-aa", {
 
                 }
 
+
+
             ]);
+
+
 
 
 
 
         }
 
+
+
         catch(error){
+
 
 
             console.error(error);
 
 
 
+
             setChat(prev=>[
+
 
                 ...prev,
 
+
                 {
 
+
                     from:"aa",
+
 
                     text:
                     "AA sedang mengalami gangguan koneksi."
 
+
                 }
+
+
 
             ]);
 
+
+
         }
+
 
 
     };
@@ -226,14 +322,8 @@ const response = await fetch("/ncc/talk-aa", {
 
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | MINIMIZE
-    |--------------------------------------------------------------------------
-    */
 
 
-    
 
 return (
 
@@ -269,6 +359,7 @@ overflow-hidden
 z-[999]
 "
 
+
 >
 
 
@@ -277,6 +368,8 @@ z-[999]
 
 
 {/* HEADER */}
+
+
 
 <div
 
@@ -295,7 +388,9 @@ cursor-move
 select-none
 "
 
+
 >
+
 
 
 <div
@@ -309,7 +404,9 @@ text-orange-300
 
 >
 
+
 <Bot size={18}/>
+
 
 
 <span className="text-sm font-semibold">
@@ -319,7 +416,10 @@ Talk To AA
 </span>
 
 
+
 </div>
+
+
 
 
 
@@ -337,7 +437,9 @@ transition
 "
 
 >
+
 <Minus size={18}/>
+
 </button>
 
 
@@ -351,7 +453,10 @@ transition
 
 
 
+
 {/* CHAT AREA */}
+
+
 
 <div
 
@@ -366,6 +471,7 @@ no-scrollbar
 
 
 >
+
 
 
 {
@@ -403,6 +509,7 @@ item.from==="user"
 <div
 
 
+
 className={`
 
 max-w-[80%]
@@ -431,6 +538,7 @@ item.from==="user"
 
 }
 
+
 `}
 
 
@@ -438,6 +546,7 @@ item.from==="user"
 
 
 {item.text}
+
 
 
 </div>
@@ -450,6 +559,12 @@ item.from==="user"
 
 
 }
+
+
+
+{/* TARGET AUTO SCROLL */}
+
+<div ref={chatEndRef}/>
 
 
 
@@ -466,7 +581,9 @@ item.from==="user"
 {/* INPUT */}
 
 
+
 <div
+
 
 className="
 absolute
@@ -481,6 +598,7 @@ flex
 gap-2
 "
 
+
 >
 
 
@@ -491,11 +609,14 @@ gap-2
 value={message}
 
 
+
 onChange={(e)=>setMessage(e.target.value)}
 
 
 
+
 onKeyDown={(e)=>{
+
 
     if(e.key==="Enter"){
 
@@ -503,7 +624,9 @@ onKeyDown={(e)=>{
 
     }
 
+
 }}
+
 
 
 
@@ -526,8 +649,9 @@ outline-none
 
 
 
-
 />
+
+
 
 
 
@@ -536,7 +660,9 @@ outline-none
 
 <button
 
+
 onClick={sendMessage}
+
 
 
 className="
@@ -552,6 +678,7 @@ justify-center
 hover:bg-orange-400/30
 "
 
+
 >
 
 
@@ -559,6 +686,8 @@ hover:bg-orange-400/30
 
 
 </button>
+
+
 
 
 

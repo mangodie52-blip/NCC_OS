@@ -58,8 +58,8 @@ const formatNumber = (value) => {
     nama: "",
     kategori: "",
     satuan: "",
-    isi_kemasan: 1,
-       stok_awal: "0",
+    isi_kemasan: "",
+       stok_awal: "",
     keterangan: "",
 
 });

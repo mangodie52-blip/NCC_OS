@@ -56,16 +56,25 @@ const formatDateTime = (date) => {
 
     const placeholders = {
 
-        kode: "KODE PRODUCT",
-        nama: "NAMA PRODUK TAS",
+        kode: "CODE PRODUCT",
+        nama: "BAG PRODUCT NAME",
         customer: "CUSTOMER",
-        warna: "WARNA",
-        ukuran: "UKURAN",
-        kategori: "KATEGORI",
-        keterangan: "KETERANGAN",
+        warna: "COLOUR",
+        ukuran: "SIZE",
+        kategori: "CATEGORY",
+        keterangan: "DESCRIPTION",
 
     };
 
+const labels = {
+    kode: "Code",
+    nama: "Product Name",
+    customer: "Customer",
+    warna: "Color",
+    ukuran: "Size",
+    kategori: "Category",
+    keterangan: "Description",
+};
 
 
     // ===========================
@@ -300,13 +309,45 @@ mt-2
 
                     >
 
-                        + Tambah Product
+                        + Add Product
 
                     </PrimaryButton>
 
 
 
                 </div>
+
+
+                <div className="
+mb-6
+rounded-2xl
+border
+border-cyan-400/20
+bg-slate-900/70
+p-4
+">
+
+<input
+type="text"
+placeholder="Cari kode / nama / customer..."
+className="
+w-full
+rounded-xl
+bg-slate-950
+border
+border-slate-700
+px-4
+py-3
+text-white
+placeholder:text-slate-500
+focus:border-cyan-400
+focus:ring-2
+focus:ring-cyan-500/20
+outline-none
+"
+/>
+
+</div>
                 {/* TABLE */}
 
 
@@ -342,18 +383,18 @@ mt-2
 
                                 {
                                     [
-                                        "Kode",
-                                        "Nama Product",
-                                        "Customer",
-                                        "Warna",
-                                        "Ukuran",
-                                        "Kategori",
-                                        "Keterangan",
-                                        "Dibuat",
-                                        "Update",
-                                        "Action"
+    "CODE",
+    "PRODUCT NAME",
+    "CUSTOMER",
+    "COLOR",
+    "SIZE",
+    "CATEGORY",
+    "DESCRIPTION",
+    "CREATED",
+    "UPDATED",
+    "ACTION"
 
-                                    ].map((head) => (
+].map((head) => (
 
 
                                         <th
@@ -685,7 +726,7 @@ mb-6
                                         ?
                                         "Edit Product"
                                         :
-                                        "Tambah Product"
+                                        "Add Product"
                                 }
 
                             </h2>
@@ -705,18 +746,18 @@ mb-6
 
             <div key={field}>
 
-                <label
-                    className="
-                        block
-                        mb-2
-                        text-sm
-                        font-medium
-                        text-slate-400
-                        tracking-wide
-                    "
-                >
-                    {field.charAt(0).toUpperCase() + field.slice(1)}
-                </label>
+               <label
+    className="
+        block
+        mb-2
+        text-sm
+        font-medium
+        text-slate-400
+        tracking-wide
+    "
+>
+    {labels[field]}
+</label>
 
                 <input
                     type="text"
@@ -766,7 +807,7 @@ mb-6
                 tracking-wide
             "
         >
-            Keterangan
+            Description
         </label>
 
         <textarea
@@ -834,14 +875,14 @@ mb-6
                 duration-200
             "
         >
-            Batal
+            Cancel
         </button>
 
         <PrimaryButton
             type="submit"
             className="px-6 py-2.5"
         >
-            💾 Simpan Product
+            💾 Save Product
         </PrimaryButton>
 
     </div>
